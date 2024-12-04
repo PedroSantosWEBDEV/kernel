@@ -64,52 +64,52 @@ lazy_static!
 
 
 		// Interrupt index: 0
-		idt[intridx(0) as usize].set_handler_fn(ir0h);
+		idt[intridx(0) as u8].set_handler_fn(ir0h);
 
 		// Interrupt index: 1
-		idt[intridx(1) as usize].set_handler_fn(ir1h);
+		idt[intridx(1) as u8].set_handler_fn(ir1h);
 
 		// Interrupt index: 2
-		idt[intridx(2) as usize].set_handler_fn(ir2h);
+		idt[intridx(2) as u8].set_handler_fn(ir2h);
 
 		// Interrupt index: 3
-		idt[intridx(3) as usize].set_handler_fn(ir3h);
+		idt[intridx(3) as u8].set_handler_fn(ir3h);
 
 		// Interrupt index: 4
-		idt[intridx(4) as usize].set_handler_fn(ir4h);
+		idt[intridx(4) as u8].set_handler_fn(ir4h);
 
 		// Interrupt index: 5
-		idt[intridx(5) as usize].set_handler_fn(ir5h);
+		idt[intridx(5) as u8].set_handler_fn(ir5h);
 
 		// Interrupt index: 6
-		idt[intridx(6) as usize].set_handler_fn(ir6h);
+		idt[intridx(6) as u8].set_handler_fn(ir6h);
 
 		// Interrupt index: 7
-		idt[intridx(7) as usize].set_handler_fn(ir7h);
+		idt[intridx(7) as u8].set_handler_fn(ir7h);
 
 		// Interrupt index: 8
-		idt[intridx(8) as usize].set_handler_fn(ir8h);
+		idt[intridx(8) as u8].set_handler_fn(ir8h);
 
 		// Interrupt index: 9
-		idt[intridx(9) as usize].set_handler_fn(ir9h);
+		idt[intridx(9) as u8].set_handler_fn(ir9h);
 
 		// Interrupt index: 10
-		idt[intridx(10) as usize].set_handler_fn(ir10h);
+		idt[intridx(10) as u8].set_handler_fn(ir10h);
 
 		// Interrupt index: 11
-		idt[intridx(11) as usize].set_handler_fn(ir11h);
+		idt[intridx(11) as u8].set_handler_fn(ir11h);
 
 		// Interrupt index: 12
-		idt[intridx(12) as usize].set_handler_fn(ir12h);
+		idt[intridx(12) as u8].set_handler_fn(ir12h);
 
 		// Interrupt index: 13
-		idt[intridx(13) as usize].set_handler_fn(ir13h);
+		idt[intridx(13) as u8].set_handler_fn(ir13h);
 
 		// Interrupt index: 14
-		idt[intridx(14) as usize].set_handler_fn(ir14h);
+		idt[intridx(14) as u8].set_handler_fn(ir14h);
 
 		// Interrupt index: 15
-		idt[intridx(15) as usize].set_handler_fn(ir15h);
+		idt[intridx(15) as u8].set_handler_fn(ir15h);
 
 		// Set stack-segment fault-handler
 		idt.stack_segment_fault.set_handler_fn(stack_segment_fault_handler);

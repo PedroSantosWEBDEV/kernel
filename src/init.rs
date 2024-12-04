@@ -81,20 +81,20 @@ pub fn start(bootinfo: &'static BootInfo)
 	println!("[INFO] INITIALIZING ATA SUPPORT");
 	crate::fs::ata::init();
 
-/*
+
 	// Create LibertyOS installation
-	let csicolor = crate::libcore::sys::console::Style::color("Blue");
-	let csireset = crate::libcore::sys::console::Style::reset();
+	let csicolor = crate::sys::console::Style::color("Blue");
+	let csireset = crate::sys::console::Style::reset();
 	println!();
 
 	print!("\nWould you like to create a new installation of LibertyOS? [Y/N]");
-	if crate::libcore::io::stdin::Stdin.readln().trim() == "y"
+	if crate::io::stdin::Stdin.readln().trim() == "y"
 	{
 		println!("you entered y");
 	}
 
-*/
-//	setup(true);
+
+	setup(true);
 }
 
 

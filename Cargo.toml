@@ -28,7 +28,7 @@ memoffset = "0.6.4"
 num-traits = { version = "0.2.14", default-features = false }
 object = { version = "0.27.1", default-features = false, features = ["read"] }
 pc-keyboard = "0.5.0"
-x86_64 = "0.14.7"
+x86_64 = "0.15.2"
 rand = { version = "0.8.4", default-features = false }
 rand_core = { version = "0.6.3", default-features = false }
 raw-cpuid = "10.2.0"
@@ -40,6 +40,7 @@ volatile = "0.2.6"
 vga = "0.2.7"
 vte = "0.10.1"
 #x86 = "0.44.0"
+
 
 [dependencies.crossbeam-queue]
 version = "0.2.1"

@@ -21,14 +21,14 @@ lazy_static!
 	{
 		let mut idt = InterruptDescriptorTable::new();
 		idt.breakpoint.set_handler_fn(breakpnt_handler);
-		idt[IntrIdx::Keyboard.asusize()].set_handler_fn(keyboard_interrupt_handler);
+		idt[IntrIdx::Keyboard.asu8()].set_handler_fn(keyboard_interrupt_handler);
 		unsafe
 		{
 			idt.double_fault
 				.set_handler_fn(doubleflt_handler)
 				.set_stack_index(gdt::DOUBLEFAULT_IST_IDX);
 		}
-		idt[IntrIdx::Timer.asusize()].set_handler_fn(timer_interrupt_handler);
+		idt[IntrIdx::Timer.asu8()].set_handler_fn(timer_interrupt_handler);
 
 		idt
 	};

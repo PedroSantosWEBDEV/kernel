@@ -7,6 +7,7 @@
 */
 
 use alloc::{alloc::{GlobalAlloc, Layout}, slice::SliceIndex, sync::Arc, vec::Vec, vec};
+use num_traits::ToPrimitive;
 use core::{cmp, ops::{Index, IndexMut}, ptr::null_mut};
 use linked_list_allocator::LockedHeap;
 use spin::Mutex;
@@ -40,7 +41,7 @@ pub fn init_heap(mapper: &mut impl Mapper<Size4KiB>, frame_allocator: &mut impl 
 	let page_range =
 	{
 		let heap_start = VirtAddr::new(HEAP_START as u64);
-		let heap_end = heap_start + HEAP_SIZE - 1u64;
+		let heap_end = heap_start + HEAP_SIZE.to_u64().unwrap() - 1u64;
 		let heap_startpage = Page::containing_address(heap_start);
 		let heap_endpage = Page::containing_address(heap_end);
 
@@ -79,7 +80,7 @@ pub fn palloc(address: u64, size: u64)
 
 	let mut framealloc = unsafe
 	{
-		crate::mem::BootInfoFrameAllocator::init(crate::mem::MEMMAP.unwrap())
+		crate::mem::BootInfoFrameAllocator::init(crate::mem::MEMMAP.lock().unwrap())
 	};
 
 	let flags = PageTableFlags::PRESENT | PageTableFlags::WRITABLE | PageTableFlags::USER_ACCESSIBLE;

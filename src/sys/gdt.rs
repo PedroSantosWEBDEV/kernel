@@ -10,6 +10,9 @@
 	IMPORTS
 */
 
+use core::convert::TryInto;
+
+use num_traits::ToPrimitive;
 use x86_64::{PrivilegeLevel, VirtAddr};
 use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor, DescriptorFlags, SegmentSelector};
 use x86_64::structures::tss::TaskStateSegment;
@@ -56,10 +59,9 @@ lazy_static!
 		tss.privilege_stack_table[0] =
 		{
 			static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
-			VirtAddr::from_ptr(unsafe
-			{
-				&STACK
-			}) + STACK_SIZE
+			VirtAddr::from_ptr(
+				&raw const STACK
+			) + STACK_SIZE.to_i64().unwrap().try_into().unwrap()
 		};
 
 
@@ -67,10 +69,9 @@ lazy_static!
 		tss.interrupt_stack_table[DOUBLEFAULT_IST_IDX as usize] =
 		{
 			static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
-			VirtAddr::from_ptr(unsafe
-			{
-				&STACK
-			}) + STACK_SIZE
+			VirtAddr::from_ptr(
+				&raw const STACK
+			) +  STACK_SIZE.to_i64().unwrap().try_into().unwrap()
 		};
 
 
@@ -78,10 +79,9 @@ lazy_static!
 		tss.interrupt_stack_table[PAGE_FAULT_ISTIDX as usize] =
 		{
 			static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
-			VirtAddr::from_ptr(unsafe
-			{
-				&STACK
-			}) + STACK_SIZE
+			VirtAddr::from_ptr(
+				&raw const STACK
+			) + STACK_SIZE.to_i64().unwrap().try_into().unwrap()
 		};
 
 
@@ -89,10 +89,9 @@ lazy_static!
 		tss.interrupt_stack_table[GEN_PROT_FAULT_ISTIDX as usize] =
 		{
 			static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
-			VirtAddr::from_ptr(unsafe
-			{
-				&STACK
-			}) + STACK_SIZE
+			VirtAddr::from_ptr(
+				&raw const STACK
+			) +  STACK_SIZE.to_i64().unwrap().try_into().unwrap()
 		};
 
 
@@ -112,19 +111,19 @@ lazy_static!
 
 
 		// Add TSS segment to the GDT
-		let tss = gdt.add_entry(Descriptor::tss_segment(&TSS));
+		let tss = gdt.append(Descriptor::tss_segment(&TSS));
 
 		// Add kernel code segment to the GDT
-		let code = gdt.add_entry(Descriptor::kernel_code_segment());
+		let code = gdt.append(Descriptor::kernel_code_segment());
 
 		// Add kernel data segment to the GDT
-		let data = gdt.add_entry(Descriptor::kernel_data_segment());
+		let data = gdt.append(Descriptor::kernel_data_segment());
 
 		// Add user code segment to the GDT
-		let usercode = gdt.add_entry(Descriptor::user_code_segment());
+		let usercode = gdt.append(Descriptor::user_code_segment());
 
 		// Add user data segment to the GDT
-		let userdata = gdt.add_entry(Descriptor::user_data_segment());
+		let userdata = gdt.append(Descriptor::user_data_segment());
 
 		(gdt, Selectors
 		{

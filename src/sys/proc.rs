@@ -13,7 +13,7 @@ use core::{arch::asm, sync::atomic::{AtomicU64, AtomicUsize, Ordering}};
 use lazy_static::lazy_static;
 use object::{Object, ObjectSegment};
 use spin::RwLock;
-use x86_64::{structures::idt::InterruptStackFrameValue, VirtAddr};
+use x86_64::{registers::rflags::RFlags, structures::{gdt::SegmentSelector, idt::InterruptStackFrameValue}, PrivilegeLevel, VirtAddr};
 
 use crate::{sys::console::Console, sys::gdt::GDT, fs::{dev::Device, Resource}};
 
@@ -192,14 +192,10 @@ impl Proc
 	// New
 	pub fn new(id: usize) -> Self
 	{
-		let isf = InterruptStackFrameValue
-		{
-			code_segment: 0,
-			cpu_flags: 0,
-			instruction_pointer: VirtAddr::new(0),
-			stack_pointer: VirtAddr::new(0),
-			stack_segment: 0,
-		};
+		let code_segment: SegmentSelector = SegmentSelector::new(1, PrivilegeLevel::Ring0);
+		let stack_segment: SegmentSelector = SegmentSelector::new(2, PrivilegeLevel::Ring0);
+		let cpu_flags: RFlags = RFlags::empty();
+		let isf = InterruptStackFrameValue::new(VirtAddr::new(0),code_segment,cpu_flags,VirtAddr::new(0),stack_segment);
 
 		Self
 		{

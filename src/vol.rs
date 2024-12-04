@@ -6,7 +6,7 @@
 	IMPORTS
 */
 
-use core::{fmt, intrinsics, marker::PhantomData, ops::{Deref, DerefMut, Index, IndexMut, Range, RangeBounds}, ptr, slice::{range, SliceIndex}};
+use core::{fmt, marker::PhantomData, ops::{Deref, DerefMut, Index, IndexMut, Range, RangeBounds}, ptr, slice::{range, SliceIndex}};
 
 // Helper traits for Read/Write:
 pub trait CanRead {}
@@ -177,7 +177,7 @@ where
 	}
 
 	// Apply mutable index-operation to wrapped slice:
-	pub fn idxmut<'a, I>(&'a mut self, idx: I) -> VOL<&mut I::Output, A>
+	pub fn idxmut<'a, I>(&'a mut self, idx: I) -> VOL<&'a mut I::Output, A>
 	where
 		I: SliceIndex<[T]>,
 		R: DerefMut,
@@ -194,7 +194,8 @@ where
 		assert_eq!(self.reference.len(), dst.len(), "DEST/SRC SLICES HAVE DIFFERING LENGTHS");
 		unsafe
 		{
-			intrinsics::volatile_copy_nonoverlapping_memory(dst.as_mut_ptr(), self.reference.as_ptr(), self.reference.len());
+			ptr::copy_nonoverlapping(self.reference.as_ptr(), dst.as_mut_ptr(), self.reference.len());
+			// intrinsics::volatile_copy_nonoverlapping_memory(dst.as_mut_ptr(), self.reference.as_ptr(), self.reference.len());
 		}
 	}
 
@@ -207,7 +208,8 @@ where
 		assert_eq!(self.reference.len(), src.len(), "DEST/SRC SLICES HAVE DIFFERING LENGTHS");
 		unsafe
 		{
-			intrinsics::volatile_copy_nonoverlapping_memory(self.reference.as_mut_ptr(), src.as_ptr(), self.reference.len());
+			ptr::copy_nonoverlapping(src.as_ptr(), self.reference.as_mut_ptr(), self.reference.len());
+			// intrinsics::volatile_copy_nonoverlapping_memory(self.reference.as_mut_ptr(), src.as_ptr(), self.reference.len());
 		}
 	}
 
@@ -227,7 +229,8 @@ where
 
 		unsafe
 		{
-			intrinsics::volatile_copy_memory(self.reference.as_mut_ptr().add(dest), self.reference.as_ptr().add(src_start), count);
+			ptr::copy(self.reference.as_ptr().add(src_start), self.reference.as_mut_ptr().add(dest), count);
+			// intrinsics::volatile_copy_memory(self.reference.as_mut_ptr().add(dest), self.reference.as_ptr().add(src_start), count);
 		}
 	}
 }
@@ -245,7 +248,8 @@ where
 	{
 		unsafe
 		{
-			intrinsics::volatile_set_memory(self.reference.as_mut_ptr(), value, self.reference.len());
+			ptr::write_bytes(self.reference.as_mut_ptr(), value, self.reference.len());
+			// intrinsics::volatile_set_memory(self.reference.as_mut_ptr(), value, self.reference.len());
 		}
 	}
 }
