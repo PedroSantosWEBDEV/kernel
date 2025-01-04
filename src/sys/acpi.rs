@@ -3,9 +3,9 @@
 #![allow(non_camel_case_types)]
 
 use acpi::{AcpiHandler, PhysicalMapping, AcpiTables};
-use alloc::boxed::Box;
+use alloc::{boxed::Box, string::ToString};
 use aml::{AmlContext, AmlName, DebugVerbosity, Handler, value::AmlValue};
-use core::ptr::NonNull;
+use core::{borrow::Borrow, ptr::NonNull};
 use x86_64::{PhysAddr, instructions::port::Port};
 
 use crate::sys;
@@ -67,17 +67,18 @@ pub fn shutdown()
 	{
 		Ok(acpi) =>
 		{
-			for (sign, sdt) in acpi.sdts
+			
+			for sdt in acpi.ssdts()
 			{
-				if sign.as_str() == "FACP"
+				if sdt.address.to_string() == "FACP"
 				{
-					pm1a_ctrl_blk = read_fadt::<u32>(sdt.physical_address, FADT::PM1A_CTRL_BLK);
+					pm1a_ctrl_blk = read_fadt::<u32>(sdt.address, FADT::PM1A_CTRL_BLK);
 				}
 			}
 
-			match &acpi.dsdt
+			match &acpi.dsdt()
 			{
-				Some(dsdt) =>
+				Ok(dsdt) =>
 				{
 					let addr = crate::mem::ptov(PhysAddr::new(dsdt.address as u64));
 					let table = unsafe
@@ -103,7 +104,7 @@ pub fn shutdown()
 					}
 				},
 
-				None => {},
+				_ => {},
 			}
 		}
 

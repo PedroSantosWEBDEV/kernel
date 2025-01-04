@@ -23,10 +23,9 @@ impl Prompt
 {
 	pub fn new() -> Self
 	{
-		cursor: 0,
-		line: Vec::with_capacity(80),
-		offset: 0,
-	}
+		self.cursor = 0;
+		self.line = Vec::with_capacity(80);
+		self.offset = 0;
 	}
 
 	pub fn input(&mut self, prompt: &str) -> Option<String>
@@ -35,3 +34,6 @@ impl Prompt
 		self.cursor = self.offset;
 		self.line = Vec::with_capacity(80);
 		self.offset = offset_from_prompt(prompt);
+	}
+}
+

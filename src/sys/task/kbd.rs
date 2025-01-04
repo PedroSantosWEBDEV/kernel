@@ -29,7 +29,7 @@ impl Stream for ScancodeStream
 		let queue = SCANCODEQ.try_get()
 			.expect("[ERR] UNINITIALIZED");
 
-		if let Ok(scancode) = queue.pop()
+		if let Some(scancode) = queue.pop()
 		{
 			return Poll::Ready(Some(scancode));
 		}
@@ -37,12 +37,12 @@ impl Stream for ScancodeStream
 		WAKER.register(&cx.waker());
 		match queue.pop()
 		{
-			Ok(scancode) =>
+			Some(scancode) =>
 			{
 				WAKER.take();
 				Poll::Ready(Some(scancode))
 			}
-			Err(crossbeam_queue::PopError) => Poll::Pending,
+			_ => Poll::Pending,
 		}
 	}
 }

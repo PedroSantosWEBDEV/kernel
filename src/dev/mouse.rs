@@ -15,7 +15,7 @@ const SET_STAT_BYTE: u8 = 0x60;
 
 bitflags!
 {
-	#[derive(Default)]
+	#[derive(Debug, Copy, Clone, Default)]
 	pub struct MouseFlags: u8
 	{
 		const LEFT_BTN = 0b0000_0001;

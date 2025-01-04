@@ -49,7 +49,7 @@ pub extern "C" fn _start() -> !
 fn stackoverflow()
 {
 	stackoverflow();
-	volatile::Volatile::new(0).read();
+	volatile::access::ReadWrite::default();
 }
 
 #[panic_handler]

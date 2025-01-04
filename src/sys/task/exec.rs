@@ -82,7 +82,7 @@ impl Exec
 			waker_cache,
 		} = self;
 
-		while let Ok(taskid) = taskq.pop()
+		while let Some(taskid) = taskq.pop()
 		{
 			let task = match tasks.get_mut(&taskid)
 			{
